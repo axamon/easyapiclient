@@ -75,12 +75,14 @@ func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (er
 	// Invia la request HTTP.
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Printf("Errore %s\n", err.Error())
+		fmt.Printf("Errore nella richiesta http %s\n", err.Error())
+		return
 	}
 
 	// Se la http response ha un codice di errore esce.
 	if resp.StatusCode > 299 {
 		fmt.Printf("Errore %d impossibile inviare sms\n", resp.StatusCode)
+		return
 	}
 
 	// Legge il body della risposta.
@@ -89,6 +91,7 @@ func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (er
 		log.Printf(
 			"Error Impossibile leggere risposta client http: %s\n",
 			err.Error())
+		return
 	}
 
 	// 	fmt.Println(string(bodyresp))

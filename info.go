@@ -56,17 +56,25 @@ func Info(ctx context.Context, token string) (shortnumber string, err error) {
 	// Se la http response ha un codice di errore esce.
 	if resp.StatusCode > 299 {
 		fmt.Printf("Errore %d\n", resp.StatusCode)
+		return
 	}
 
 	// Legge il body della risposta.
 	bodyresp, err := ioutil.ReadAll(resp.Body)
+
 	if err != nil {
 		log.Printf(
 			"Error Impossibile leggere risposta client http: %s\n",
 			err.Error())
 	}
 
-	xml.Unmarshal(bodyresp, &sNum)
+	err = xml.Unmarshal(bodyresp, &sNum)
+
+	if err != nil {
+		log.Printf(
+			"Error Impossibile effettuare caricamento shortnumber: %s\n",
+			err.Error())
+	}
 
 	// fmt.Println(sNum.Number)
 

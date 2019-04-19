@@ -5,6 +5,6 @@
 
 # installazione
 
-    '''$ go get -u github.com/axamon/easyapiclient'''
+    ```$ go get -u github.com/axamon/easyapiclient```
 
 Nella directory example c'è un 

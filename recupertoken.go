@@ -50,7 +50,7 @@ func RecuperaToken(ctx context.Context, username, password string) (token string
 	if err != nil {
 		log.Printf("Errore creazione request: %v\n",
 			req)
-
+		return
 	}
 
 	// Aggiunge alla request il contesto.
@@ -67,6 +67,7 @@ func RecuperaToken(ctx context.Context, username, password string) (token string
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Printf("Errore %s\n", err.Error())
+		return
 	}
 
 	// Se la http response ha un codice di errore esce.
@@ -81,7 +82,7 @@ func RecuperaToken(ctx context.Context, username, password string) (token string
 		log.Printf(
 			"Error Impossibile leggere risposta client http: %s\n",
 			err.Error())
-
+		return
 	}
 
 	// fmt.Println(string(bodyresp))
@@ -95,7 +96,7 @@ func RecuperaToken(ctx context.Context, username, password string) (token string
 		log.Printf(
 			"Errore nella scomposizione del json: %s\n",
 			err.Error())
-
+		return
 	}
 
 	//fmt.Printf("Token attuale: \t%s\nScadenza tra: \t%d secondi\n",

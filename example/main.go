@@ -30,4 +30,6 @@ func main() {
 		log.Printf("Errore: %s\n", err.Error())
 		os.Exit(1)
 	}
+
+	easyapiclient.Info(ctx, token)
 }

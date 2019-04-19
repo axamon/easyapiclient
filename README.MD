@@ -7,4 +7,8 @@
 
     ```$ go get -u github.com/axamon/easyapiclient```
 
-Nella directory example c'è un 
+# configurazione
+Nella directory example c'è un file di esempio da compilare, modificando il file conf.json.example con i valori dell'istanza easyapi di TIM attiva e rinominando il file conf.json potrai inviare sms immediatamente.
+
+# sintassi
+    ```$ example +395555555555 "Messaggio di test"```

@@ -12,9 +12,6 @@ import (
 	"strings"
 )
 
-const username string = "nVLKsN_IoUVa7F7WhxLkMaFR5Poa"
-const password string = "budFYDObsGHzUHXpLkMuT7XbEtwa"
-
 // TokenResponse contiene le risposte di EasyApi.
 type TokenResponse struct {
 	Token     string `json:"access_token"`
@@ -25,7 +22,7 @@ type TokenResponse struct {
 
 // RecuperaToken restituisce il token attuale
 // e la scadenza dello stesso in sec.
-func RecuperaToken(ctx context.Context) (token string, scadenza int, err error) {
+func RecuperaToken(ctx context.Context, username, password string) (token string, scadenza int, err error) {
 
 	credenziali := username + ":" + password
 	authenticator := base64.StdEncoding.EncodeToString([]byte(credenziali))
@@ -105,7 +102,7 @@ func RecuperaToken(ctx context.Context) (token string, scadenza int, err error) 
 }
 
 // RinnovaToken rinnova il token attuale
-func RinnovaToken(ctx context.Context, vecchiotoken string) (token string, scadenza int, err error) {
+func RinnovaToken(ctx context.Context, vecchiotoken, username, password string) (token string, scadenza int, err error) {
 	credenziali := username + ":" + password
 	authenticator := base64.StdEncoding.EncodeToString([]byte(credenziali))
 

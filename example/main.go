@@ -2,11 +2,22 @@ package main
 
 import (
 	"context"
+	"flag"
 	"log"
 	"os"
 
 	"github.com/axamon/easyapiclient"
+	"github.com/tkanos/gonfig"
 )
+
+// Configuration tiene gli elementi di configurazione
+type Configuration struct {
+	username string
+	password string
+}
+
+var conf Configuration
+var file = flag.String("file", "conf.json", "File di configurazione")
 
 func main() {
 	// Creo il contesto inziale che verrà propagato alle go-routine
@@ -14,7 +25,12 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	token, _, err := easyapiclient.RecuperaToken(ctx)
+	flag.Parse()
+
+	// Recupera valori dal file di configurazione passato come argomento.
+	err := gonfig.GetConf(*file, &conf)
+
+	token, _, err := easyapiclient.RecuperaToken(ctx, conf.username, conf.password)
 
 	if err != nil {
 		log.Printf("Errore: %s\n", err.Error())

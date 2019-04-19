@@ -82,7 +82,7 @@ func RecuperaToken(ctx context.Context, username, password string) (token string
 
 	}
 
-	fmt.Println(string(bodyresp))
+	// fmt.Println(string(bodyresp))
 
 	// Come da specifica chiude il body della response.
 	//resp.Body.Close()
@@ -165,7 +165,7 @@ func RinnovaToken(ctx context.Context, vecchiotoken, username, password string) 
 	// Come da specifica chiude il body della response.
 	resp.Body.Close()
 
-	// Effettua l'unmashalling dei dati nella variabile.
+	// Effettua l'unmarshalling dei dati nella variabile.
 	err = json.Unmarshal(bodyresp, &tokeninfo)
 	if err != nil {
 		log.Printf(

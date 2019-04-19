@@ -8,11 +8,10 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 )
 
 // Info recupera lo shortnumber da usare per inviare sms.
-func Info(ctx context.Context, token string) {
+func Info(ctx context.Context, token string) (shortnumber string, err error) {
 
 	type ShortNum struct {
 		Number string `xml:"shortNumber"`
@@ -36,7 +35,6 @@ func Info(ctx context.Context, token string) {
 	if err != nil {
 		log.Printf("Errore creazione request: %v\n",
 			req)
-		os.Exit(1)
 	}
 
 	// Aggiunge alla request il contesto.
@@ -58,7 +56,6 @@ func Info(ctx context.Context, token string) {
 	// Se la http response ha un codice di errore esce.
 	if resp.StatusCode > 299 {
 		fmt.Printf("Errore %d\n", resp.StatusCode)
-		os.Exit(1)
 	}
 
 	// Legge il body della risposta.
@@ -67,13 +64,12 @@ func Info(ctx context.Context, token string) {
 		log.Printf(
 			"Error Impossibile leggere risposta client http: %s\n",
 			err.Error())
-		os.Exit(1)
 	}
 
 	xml.Unmarshal(bodyresp, &sNum)
 
 	fmt.Println(sNum.Number)
 
-	return
+	return sNum.Number, err
 
 }

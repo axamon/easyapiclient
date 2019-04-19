@@ -1,17 +1,95 @@
 package easyapiclient
 
 import (
+	"bytes"
 	"context"
-	"encoding/base64"
+	"crypto/tls"
+	"encoding/xml"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
 )
 
-// InviaSms invia sms i destinatari.
-func InviaSms(ctx context.Context, token string) (err error) {
+// InviaSms invia smss i destinatari.
+func InviaSms(ctx context.Context, token, shortnumber string) (err error) {
 
-	// Trasforma token in Base64.
-	tokenb64 := base64.StdEncoding.EncodeToString([]byte(token))
+	type sms struct {
+		Address  string `xml:"address"`
+		Msgid    string `xml:"msgid"`
+		Notify   string `xml:"notify"`
+		Validity string `xml:"validity"`
+		Oadc     string `xml:"oadc"`
+		Message  string `xml:"message"`
+	}
 
-	fmt.Println(tokenb64)
+	smss := new(sms)
+
+	smss.Address = "tel:+393357291533"
+	smss.Msgid = "9938"
+	smss.Notify = "N"
+	smss.Validity = "01:00"
+	smss.Oadc = shortnumber
+	smss.Message = "Hey gringo... titovo!"
+
+	fmt.Println(smss)
+
+	bodyreq, err := xml.Marshal(smss)
+
+	if err != nil {
+		log.Printf("Impossibile parsare dati in xml: %s\n", err.Error())
+	}
+
+	urlmt := "https://easyapi.telecomitalia.it:8248/smss/v1/mt"
+	bearertoken := "Bearer " + token
+
+	// Accetta anche certificati https non validi.
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+
+	// Crea il cliet http.
+	client := &http.Client{Transport: tr}
+
+	// Crea la request da inviare.
+	req, err := http.NewRequest("POST", urlmt, bytes.NewBuffer(bodyreq))
+	if err != nil {
+		log.Printf("Errore creazione request: %v\n",
+			req)
+	}
+
+	fmt.Println(req)
+
+	// Aggiunge alla request il contesto.
+	//req.WithContext(ctx)
+
+	// Aggiunge alla request l'autenticazione.
+	req.Header.Set("Authorization",
+		bearertoken)
+
+	// Aggiunge alla request gli header per passare le informazioni.
+	//req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	// Invia la request HTTP.
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Printf("Errore %s\n", err.Error())
+	}
+
+	// Se la http response ha un codice di errore esce.
+	if resp.StatusCode > 299 {
+		fmt.Printf("Errore %d impossibile inviare smss\n", resp.StatusCode)
+	}
+
+	// Legge il body della risposta.
+	bodyresp, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Printf(
+			"Error Impossibile leggere risposta client http: %s\n",
+			err.Error())
+	}
+
+	fmt.Println(string(bodyresp))
+
 	return
 }

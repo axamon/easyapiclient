@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/axamon/easyapiclient/v1"
+	"github.com/axamon/easyapiclient"
 )
 
 func main() {
@@ -23,4 +23,11 @@ func main() {
 	}
 
 	fmt.Println(token, scadenza)
+
+	err = easyapiclient.InviaSms(ctx, token)
+
+	if err != nil {
+		log.Printf("Errore: %s\n", err.Error())
+		os.Exit(1)
+	}
 }

@@ -12,8 +12,8 @@ import (
 
 // Configuration tiene gli elementi di configurazione
 type Configuration struct {
-	username string
-	password string
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 var conf Configuration
@@ -30,7 +30,11 @@ func main() {
 	// Recupera valori dal file di configurazione passato come argomento.
 	err := gonfig.GetConf(*file, &conf)
 
-	token, _, err := easyapiclient.RecuperaToken(ctx, conf.username, conf.password)
+	if err != nil {
+		log.Printf("Errore Impossibile recuperare informazioni dal file di configurazione: %s", *file)
+	}
+
+	token, _, err := easyapiclient.RecuperaToken(ctx, conf.Username, conf.Password)
 
 	if err != nil {
 		log.Printf("Errore: %s\n", err.Error())

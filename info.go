@@ -38,7 +38,7 @@ func Info(ctx context.Context, token string) (shortnumber string, err error) {
 	}
 
 	// Aggiunge alla request il contesto.
-	//req.WithContext(ctx)
+	req.WithContext(ctx)
 
 	// Aggiunge alla request l'autenticazione.
 	req.Header.Set("Authorization",

@@ -16,7 +16,7 @@ import (
 type TokenResponse struct {
 	Token     string `json:"access_token"`
 	Scope     string `json:"scope"`
-	Tokentype string `json:"token type"`
+	Tokentype string `json:"token_type"`
 	Scadenza  int    `json:"expires_in"`
 }
 
@@ -69,8 +69,8 @@ func RecuperaToken(ctx context.Context, username, password string) (token string
 
 	// Se la http response ha un codice di errore esce.
 	if resp.StatusCode > 299 {
-		fmt.Printf("Errore %d\n", resp.StatusCode)
-
+		fmt.Printf("Errore impossibile recuperare token %d\n", resp.StatusCode)
+		return
 	}
 
 	// Legge il body della risposta.
@@ -82,8 +82,10 @@ func RecuperaToken(ctx context.Context, username, password string) (token string
 
 	}
 
+	fmt.Println(string(bodyresp))
+
 	// Come da specifica chiude il body della response.
-	resp.Body.Close()
+	//resp.Body.Close()
 
 	// Effettua l'unmashalling dei dati nella variabile.
 	err = json.Unmarshal(bodyresp, &tokeninfo)

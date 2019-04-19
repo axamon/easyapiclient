@@ -11,7 +11,7 @@ import (
 	"net/http"
 )
 
-// InviaSms invia smss i destinatari.
+// InviaSms invia sms ai destinatari.
 func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (err error) {
 
 	type sms struct {
@@ -63,7 +63,7 @@ func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (er
 	// fmt.Println(req)
 
 	// Aggiunge alla request il contesto.
-	//req.WithContext(ctx)
+	req.WithContext(ctx)
 
 	// Aggiunge alla request l'autenticazione.
 	req.Header.Set("Authorization",

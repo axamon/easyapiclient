@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 
@@ -15,14 +14,14 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	token, scadenza, err := easyapiclient.RecuperaToken(ctx)
+	token, _, err := easyapiclient.RecuperaToken(ctx)
 
 	if err != nil {
 		log.Printf("Errore: %s\n", err.Error())
 		os.Exit(1)
 	}
 
-	fmt.Printf("token %s in scadenza tra %d secondi\n", token, scadenza)
+	// fmt.Printf("token %s in scadenza tra %d secondi\n", token, scadenza)
 
 	/* // Se scandeza vicino alla fine rinnovare token.
 	nuovotoken, nuovascadenza, err := easyapiclient.RinnovaToken(ctx, token)
@@ -47,6 +46,9 @@ func main() {
 		log.Printf("Errore, impossibile recuperare shortnumber %s\n", err.Error())
 	}
 
-	easyapiclient.InviaSms(ctx, token, shortnumber)
+	err = easyapiclient.InviaSms(ctx, token, shortnumber, os.Args[1], os.Args[2])
 
+	if err != nil {
+		log.Printf("Errore, sms non inviato: %s\n", err)
+	}
 }

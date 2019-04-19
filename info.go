@@ -68,7 +68,7 @@ func Info(ctx context.Context, token string) (shortnumber string, err error) {
 
 	xml.Unmarshal(bodyresp, &sNum)
 
-	fmt.Println(sNum.Number)
+	// fmt.Println(sNum.Number)
 
 	return sNum.Number, err
 

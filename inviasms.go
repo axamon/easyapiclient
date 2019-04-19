@@ -12,7 +12,7 @@ import (
 )
 
 // InviaSms invia smss i destinatari.
-func InviaSms(ctx context.Context, token, shortnumber string) (err error) {
+func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (err error) {
 
 	type sms struct {
 		Address  string `xml:"address"`
@@ -25,14 +25,16 @@ func InviaSms(ctx context.Context, token, shortnumber string) (err error) {
 
 	smss := new(sms)
 
-	smss.Address = "tel:+393357291533"
+	address := "tel:" + cell
+
+	smss.Address = address
 	smss.Msgid = "9938"
-	smss.Notify = "N"
+	smss.Notify = "Y"
 	smss.Validity = "01:00"
 	smss.Oadc = shortnumber
-	smss.Message = "Hey gringo... titovo!"
+	smss.Message = message
 
-	fmt.Println(smss)
+	//fmt.Println(smss)
 
 	bodyreq, err := xml.Marshal(smss)
 
@@ -40,7 +42,7 @@ func InviaSms(ctx context.Context, token, shortnumber string) (err error) {
 		log.Printf("Impossibile parsare dati in xml: %s\n", err.Error())
 	}
 
-	urlmt := "https://easyapi.telecomitalia.it:8248/smss/v1/mt"
+	urlmt := "https://easyapi.telecomitalia.it:8248/sms/v1/mt"
 	bearertoken := "Bearer " + token
 
 	// Accetta anche certificati https non validi.
@@ -58,7 +60,7 @@ func InviaSms(ctx context.Context, token, shortnumber string) (err error) {
 			req)
 	}
 
-	fmt.Println(req)
+	// fmt.Println(req)
 
 	// Aggiunge alla request il contesto.
 	//req.WithContext(ctx)
@@ -68,7 +70,7 @@ func InviaSms(ctx context.Context, token, shortnumber string) (err error) {
 		bearertoken)
 
 	// Aggiunge alla request gli header per passare le informazioni.
-	//req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Content-Type", "application/xml")
 
 	// Invia la request HTTP.
 	resp, err := client.Do(req)
@@ -78,18 +80,18 @@ func InviaSms(ctx context.Context, token, shortnumber string) (err error) {
 
 	// Se la http response ha un codice di errore esce.
 	if resp.StatusCode > 299 {
-		fmt.Printf("Errore %d impossibile inviare smss\n", resp.StatusCode)
+		fmt.Printf("Errore %d impossibile inviare sms\n", resp.StatusCode)
 	}
 
 	// Legge il body della risposta.
-	bodyresp, err := ioutil.ReadAll(resp.Body)
+	_, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Printf(
 			"Error Impossibile leggere risposta client http: %s\n",
 			err.Error())
 	}
 
-	fmt.Println(string(bodyresp))
+	// 	fmt.Println(string(bodyresp))
 
-	return
+	return err
 }

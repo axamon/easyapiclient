@@ -1,3 +1,5 @@
+// Package easyapiclient permette un facile utlizzo
+// delle API Easyapi di TIM.
 package easyapiclient
 
 import (

@@ -7,7 +7,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"regexp"
 )
@@ -34,6 +33,11 @@ func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (er
 		return err
 	}
 
+	if len(message) > 160 {
+		err := fmt.Errorf("Messaggio troppo lungo, max 160 caratteri")
+		return err
+	}
+
 	smss.Address = address
 	smss.Msgid = "9938"
 	smss.Notify = "Y"
@@ -46,7 +50,8 @@ func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (er
 	bodyreq, err := xml.Marshal(smss)
 
 	if err != nil {
-		log.Printf("Impossibile parsare dati in xml: %s\n", err.Error())
+		errbodyreq := fmt.Errorf("Impossibile parsare dati in xml: %s", err.Error())
+		return errbodyreq
 	}
 
 	urlmt := "https://easyapi.telecomitalia.it:8248/sms/v1/mt"
@@ -63,8 +68,8 @@ func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (er
 	// Crea la request da inviare.
 	req, err := http.NewRequest("POST", urlmt, bytes.NewBuffer(bodyreq))
 	if err != nil {
-		log.Printf("Errore creazione request: %v\n",
-			req)
+		errreq := fmt.Errorf("Errore creazione request: %v: %s", req, err.Error())
+		return errreq
 	}
 
 	// fmt.Println(req)
@@ -73,8 +78,7 @@ func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (er
 	req.WithContext(ctx)
 
 	// Aggiunge alla request l'autenticazione.
-	req.Header.Set("Authorization",
-		bearertoken)
+	req.Header.Set("Authorization", bearertoken)
 
 	// Aggiunge alla request gli header per passare le informazioni.
 	req.Header.Set("Content-Type", "application/xml")
@@ -82,23 +86,23 @@ func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (er
 	// Invia la request HTTP.
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Printf("Errore nella richiesta http %s\n", err.Error())
-		return
+		errresp := fmt.Errorf("Errore nella richiesta http %s", err.Error())
+		return errresp
 	}
 
 	// Se la http response ha un codice di errore esce.
 	if resp.StatusCode > 299 {
-		fmt.Printf("Errore %d impossibile inviare sms\n", resp.StatusCode)
-		return
+		errStatusCode := fmt.Errorf("Errore %d impossibile inviare sms", resp.StatusCode)
+		return errStatusCode
 	}
 
 	// Legge il body della risposta.
 	_, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Printf(
-			"Error Impossibile leggere risposta client http: %s\n",
+		errbody := fmt.Errorf(
+			"Error Impossibile leggere risposta client http: %s",
 			err.Error())
-		return
+		return errbody
 	}
 
 	// 	fmt.Println(string(bodyresp))

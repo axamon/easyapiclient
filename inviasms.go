@@ -9,7 +9,10 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"regexp"
 )
+
+var isCell = regexp.MustCompile(`(?m)tel:\+39\d{10,10}`)
 
 // InviaSms invia sms ai destinatari.
 func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (err error) {
@@ -26,11 +29,15 @@ func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (er
 	smss := new(sms)
 
 	address := "tel:" + cell
+	if !isCell.MatchString(address) {
+		err := fmt.Errorf("Cellulare non nel formato standard: +39xxxxxxxxxx : %s", cell)
+		return err
+	}
 
 	smss.Address = address
 	smss.Msgid = "9938"
 	smss.Notify = "Y"
-	smss.Validity = "01:00"
+	smss.Validity = "00:03"
 	smss.Oadc = shortnumber
 	smss.Message = message
 

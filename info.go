@@ -41,8 +41,7 @@ func Info(ctx context.Context, token string) (shortnumber string, err error) {
 	req.WithContext(ctx)
 
 	// Aggiunge alla request l'autenticazione.
-	req.Header.Set("Authorization",
-		bearertoken)
+	req.Header.Set("Authorization", bearertoken)
 
 	// Aggiunge alla request gli header per passare le informazioni.
 	//req.Header.Set("Content-Type", "application/x-www-form-urlencoded")

@@ -25,6 +25,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
+	// Parsa i parametri non di default passati all'avvio.
 	flag.Parse()
 
 	// Recupera valori dal file di configurazione passato come argomento.
@@ -32,6 +33,7 @@ func main() {
 
 	if err != nil {
 		log.Printf("Errore Impossibile recuperare informazioni dal file di configurazione: %s", *file)
+		os.Exit(1)
 	}
 
 	token, _, err := easyapiclient.RecuperaToken(ctx, conf.Username, conf.Password)
@@ -64,11 +66,16 @@ func main() {
 
 	if err != nil {
 		log.Printf("Errore, impossibile recuperare shortnumber %s\n", err.Error())
+		os.Exit(1)
 	}
 
 	err = easyapiclient.InviaSms(ctx, token, shortnumber, os.Args[1], os.Args[2])
 
 	if err != nil {
 		log.Printf("Errore, sms non inviato: %s\n", err)
+		os.Exit(1)
 	}
+
+	// Termina correttamente.
+	os.Exit(0)
 }

@@ -101,6 +101,9 @@ func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (er
 		return errresp
 	}
 
+	// Body va chiuso come da specifica.
+	defer resp.Body.Close()
+
 	// Se la http response ha un codice di errore esce.
 	if resp.StatusCode > 299 {
 		errStatusCode := fmt.Errorf("Errore %d impossibile inviare sms", resp.StatusCode)

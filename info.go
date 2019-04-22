@@ -67,6 +67,9 @@ func Info(ctx context.Context, token string) (shortnumber string, err error) {
 			err.Error())
 	}
 
+	// Come da specifiche va chiuso il body.
+	defer resp.Body.Close()
+
 	err = xml.Unmarshal(bodyresp, &sNum)
 
 	if err != nil {

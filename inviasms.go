@@ -46,7 +46,7 @@ func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (er
 		return err
 	}
 
-	// Verifica che il token sia nel formsto corretto.
+	// Verifica che il token sia nel formato corretto.
 	if !isToken.MatchString(token) {
 		err := fmt.Errorf("Token non nel formato standard: %s", token)
 		return err

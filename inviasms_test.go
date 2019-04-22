@@ -25,6 +25,7 @@ func TestInviaSms(t *testing.T) {
 	}{
 		{"Cell errato", args{ctx, "token1", "23244", "65546", "Ciao"}, true},
 		{"Messaggio troppo lungo", args{ctx, "token1", "23244", "+393333333333", longmessage}, true},
+		{"Token sbagliato", args{ctx, "token1", "23244", "+393333333333", "test invio"}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

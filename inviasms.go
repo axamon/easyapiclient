@@ -13,6 +13,8 @@ import (
 
 var isCell = regexp.MustCompile(`(?m)tel:\+39\d{10,10}`)
 
+var isToken = regexp.MustCompile(`(?m)[0-9a-z]{8,8}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{12,12}`)
+
 // InviaSms invia sms ai destinatari.
 func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (err error) {
 
@@ -25,16 +27,25 @@ func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (er
 		Message  string `xml:"message"`
 	}
 
+	// Crea nuova struttura per sms.
 	smss := new(sms)
 
+	// Formatta e verifica che il cell inserito sia secondo standard.
 	address := "tel:" + cell
 	if !isCell.MatchString(address) {
 		err := fmt.Errorf("Cellulare non nel formato standard: +39xxxxxxxxxx : %s", cell)
 		return err
 	}
 
+	// Verifica che il messsaggio non super 160 caratteri.
 	if len(message) > 160 {
 		err := fmt.Errorf("Messaggio troppo lungo, max 160 caratteri")
+		return err
+	}
+
+	// Verifica che il token sia nel formsto corretto.
+	if !isToken.MatchString(token) {
+		err := fmt.Errorf("Token non nel formato standard: %s", token)
 		return err
 	}
 

@@ -54,6 +54,7 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Invia sms.
 	err = easyapiclient.InviaSms(ctx, token, shortnumber, os.Args[1], os.Args[2])
 
 	if err != nil {

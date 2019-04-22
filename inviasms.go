@@ -11,11 +11,13 @@ import (
 	"regexp"
 )
 
-var isCell = regexp.MustCompile(`(?m)tel:\+39\d{10,10}`)
+// isCell è il formato internazionale italiano dei cellulari.
+var isCell = regexp.MustCompile(`(?m)\+39\d{10,10}`)
 
+// isToken è il formato che deve avere un token easyapi ben formattato.
 var isToken = regexp.MustCompile(`(?m)[0-9a-z]{8,8}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{12,12}`)
 
-// InviaSms invia sms ai destinatari.
+// InviaSms invia un sms al destinatario.
 func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (err error) {
 
 	type sms struct {
@@ -28,14 +30,15 @@ func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (er
 	}
 
 	// Crea nuova struttura per sms.
-	smss := new(sms)
+	nuovoSMS := new(sms)
 
 	// Formatta e verifica che il cell inserito sia secondo standard.
-	address := "tel:" + cell
-	if !isCell.MatchString(address) {
+	if !isCell.MatchString(cell) {
 		err := fmt.Errorf("Cellulare non nel formato standard: +39xxxxxxxxxx : %s", cell)
 		return err
 	}
+
+	address := "tel:" + cell
 
 	// Verifica che il messsaggio non super 160 caratteri.
 	if len(message) > 160 {
@@ -49,16 +52,16 @@ func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (er
 		return err
 	}
 
-	smss.Address = address
-	smss.Msgid = "9938"
-	smss.Notify = "Y"
-	smss.Validity = "00:03"
-	smss.Oadc = shortnumber
-	smss.Message = message
+	nuovoSMS.Address = address
+	nuovoSMS.Msgid = "9938"
+	nuovoSMS.Notify = "Y"
+	nuovoSMS.Validity = "00:03"
+	nuovoSMS.Oadc = shortnumber
+	nuovoSMS.Message = message
 
-	//fmt.Println(smss)
+	//fmt.Println(nuovoSMS)
 
-	bodyreq, err := xml.Marshal(smss)
+	bodyreq, err := xml.Marshal(nuovoSMS)
 
 	if err != nil {
 		errbodyreq := fmt.Errorf("Impossibile parsare dati in xml: %s", err.Error())

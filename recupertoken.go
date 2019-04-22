@@ -48,8 +48,7 @@ func RecuperaToken(ctx context.Context, username, password string) (token string
 		"https://easyapi.telecomitalia.it:8248/token",
 		body)
 	if err != nil {
-		log.Printf("Errore creazione request: %v\n",
-			req)
+		log.Printf("Errore creazione request: %v\n", req)
 		return
 	}
 
@@ -88,7 +87,7 @@ func RecuperaToken(ctx context.Context, username, password string) (token string
 	// fmt.Println(string(bodyresp))
 
 	// Come da specifica chiude il body della response.
-	//resp.Body.Close()
+	defer resp.Body.Close()
 
 	// Effettua l'unmashalling dei dati nella variabile.
 	err = json.Unmarshal(bodyresp, &tokeninfo)

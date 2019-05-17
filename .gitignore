@@ -1,4 +1,5 @@
 ./example/conf.json
 *.json
+conf.json
 ./example/example
 example/example

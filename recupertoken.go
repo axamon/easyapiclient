@@ -98,10 +98,10 @@ func RecuperaToken(ctx context.Context, username, password string) (token string
 			err.Error())
 		return
 	}
-
-	fmt.Printf("Token attuale: \t%s\nScadenza tra: \t%d secondi\n",
-		tokeninfo.Token,
-		tokeninfo.Scadenza)
-
+	/*
+		fmt.Printf("Token attuale: \t%s\nScadenza tra: \t%d secondi\n",
+			tokeninfo.Token,
+			tokeninfo.Scadenza)
+	*/
 	return tokeninfo.Token, tokeninfo.Scadenza, err
 }

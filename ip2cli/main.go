@@ -17,7 +17,7 @@ type Configuration struct {
 }
 
 var conf Configuration
-var file = flag.String("file", "/omd/sites/master/sendsmsconf.json", "File di configurazione")
+var file = flag.String("file", "conf.json", "File di configurazione")
 
 func main() {
 	// Creo il contesto inziale che verrà propagato alle go-routine
@@ -32,11 +32,11 @@ func main() {
 	err := gonfig.GetConf(*file, &conf)
 
 	if err != nil {
-		log.Printf("Errore Impossibile recuperare informazioni dal file di configurazione: %s", *file)
+		log.Printf("Errore Impossibile recuperare informazioni dal file di configurazione: %s\n", *file)
 		os.Exit(1)
 	}
 
-	// Recupera un token sms valido.
+	// Recupera un token alignment valido.
 	token, _, err := easyapiclient.RecuperaToken(ctx, conf.Username, conf.Password)
 
 	if err != nil {
@@ -44,24 +44,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	// fmt.Printf("token %s in scadenza tra %d secondi\n", token, scadenza)
+	//fmt.Printf("token %s in scadenza tra %d secondi\n", token, scadenza)
 
-	// Recupera lo shortnumber da usare per inviare sms.
-	shortnumber, err := easyapiclient.Info(ctx, token)
-
-	if err != nil {
-		log.Printf("Errore, impossibile recuperare shortnumber %s\n", err.Error())
-		os.Exit(1)
-	}
-
-	// Invia sms.
-	err = easyapiclient.InviaSms(ctx, token, shortnumber, os.Args[1], os.Args[2])
+	ip := os.Args[1]
+	// Avvia ricerca cli da ip.
+	err = RicercaCli(ctx, token, ip)
 
 	if err != nil {
-		log.Printf("Errore, sms non inviato: %s\n", err)
-		os.Exit(1)
+		log.Printf("Errore: %s\n", err.Error())
 	}
-
 	// Termina correttamente.
 	os.Exit(0)
 }

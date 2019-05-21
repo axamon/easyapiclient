@@ -75,7 +75,7 @@ func VerificaAlignment(ctx context.Context, token, cli string) (response string,
 
 	// Se la http response ha un codice di errore esce.
 	if resp.StatusCode > 299 {
-		errStatusCode := fmt.Errorf("Errore %d impossibile inviare sms", resp.StatusCode)
+		errStatusCode := fmt.Errorf("Errore %d impossibile effettuare verifica", resp.StatusCode)
 		return "", errStatusCode
 	}
 

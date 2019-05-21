@@ -13,7 +13,7 @@ func alignmentHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	version := vars["version"]
 	cli := vars["cli"]
-	w.Write([]byte("Gorilla!\n"))
+	//w.Write([]byte("Gorilla!\n"))
 	result, err := alignment.Verifica(cli)
 	if err != nil {
 		log.Printf("Errore: %s\n", err.Error())

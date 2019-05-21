@@ -19,12 +19,12 @@ var isCli = regexp.MustCompile(`(?m)\+39\d{9,10}`)
 var isToken = regexp.MustCompile(`(?m)[0-9a-z]{8,8}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{12,12}`)
 
 // VerificaAlignment verifica allineamento accesspoin router.
-func VerificaAlignment(ctx context.Context, token, cli string) (err error) {
+func VerificaAlignment(ctx context.Context, token, cli string) (response string, err error) {
 
 	// Formatta e verifica che il cell inserito sia secondo standard.
 	if !isCli.MatchString(cli) {
 		err := fmt.Errorf("Cellulare non nel formato standard: +39xxxxxxxxxx : %s", cli)
-		return err
+		return "", err
 	}
 
 	address := "tel:" + cli
@@ -32,7 +32,7 @@ func VerificaAlignment(ctx context.Context, token, cli string) (err error) {
 	// Verifica che il token sia nel formato corretto.
 	if !isToken.MatchString(token) {
 		err := fmt.Errorf("Token non nel formato standard: %s", token)
-		return err
+		return "", err
 	}
 
 	bearertoken := "Bearer " + token
@@ -49,7 +49,7 @@ func VerificaAlignment(ctx context.Context, token, cli string) (err error) {
 	req, err := http.NewRequest("GET", urlAlignment+address, nil)
 	if err != nil {
 		errreq := fmt.Errorf("Errore creazione request: %v: %s", req, err.Error())
-		return errreq
+		return "", errreq
 	}
 
 	// fmt.Println(req)
@@ -67,7 +67,7 @@ func VerificaAlignment(ctx context.Context, token, cli string) (err error) {
 	resp, err := client.Do(req)
 	if err != nil {
 		errresp := fmt.Errorf("Errore nella richiesta http %s", err.Error())
-		return errresp
+		return "", errresp
 	}
 
 	// Body va chiuso come da specifica.
@@ -76,7 +76,7 @@ func VerificaAlignment(ctx context.Context, token, cli string) (err error) {
 	// Se la http response ha un codice di errore esce.
 	if resp.StatusCode > 299 {
 		errStatusCode := fmt.Errorf("Errore %d impossibile inviare sms", resp.StatusCode)
-		return errStatusCode
+		return "", errStatusCode
 	}
 
 	// Legge il body della risposta.
@@ -85,10 +85,12 @@ func VerificaAlignment(ctx context.Context, token, cli string) (err error) {
 		errbody := fmt.Errorf(
 			"Error Impossibile leggere risposta client http: %s",
 			err.Error())
-		return errbody
+		return "", errbody
 	}
 
-	fmt.Println(string(bodyresp))
+	//fmt.Println(string(bodyresp))
 
-	return err
+	response = string(bodyresp)
+
+	return response, err
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"log"
 	"os"
 
@@ -40,7 +41,7 @@ func main() {
 	token, _, err := easyapiclient.RecuperaToken(ctx, conf.Username, conf.Password)
 
 	if err != nil {
-		log.Printf("Errore nel recupero del token sms: %s\n", err.Error())
+		log.Printf("Errore nel recupero del token easyapi: %s\n", err.Error())
 		os.Exit(1)
 	}
 
@@ -48,11 +49,13 @@ func main() {
 
 	cli := os.Args[1]
 	// Avvia verifica cli.
-	err = VerificaAlignment(ctx, token, cli)
+	result, err := VerificaAlignment(ctx, token, cli)
 
 	if err != nil {
 		log.Printf("Errore: %s\n", err.Error())
 	}
+
+	fmt.Println(result)
 	// Termina correttamente.
 	os.Exit(0)
 }

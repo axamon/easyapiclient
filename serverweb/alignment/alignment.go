@@ -1,9 +1,8 @@
-package main
+package alignment
 
 import (
 	"context"
 	"flag"
-	"fmt"
 	"log"
 	"os"
 
@@ -20,7 +19,8 @@ type Configuration struct {
 var conf Configuration
 var file = flag.String("file", "conf.json", "File di configurazione")
 
-func main() {
+// Verifica restituisce l'allineamento del cli.
+func Verifica(cli string) (result string, err error) {
 	// Creo il contesto inziale che verrà propagato alle go-routine
 	// con la funzione cancel per uscire dal programma in modo pulito.
 	ctx, cancel := context.WithCancel(context.Background())
@@ -30,7 +30,7 @@ func main() {
 	flag.Parse()
 
 	// Recupera valori dal file di configurazione passato come argomento.
-	err := gonfig.GetConf(*file, &conf)
+	err = gonfig.GetConf(*file, &conf)
 
 	if err != nil {
 		log.Printf("Errore Impossibile recuperare informazioni dal file di configurazione: %s\n", *file)
@@ -47,15 +47,14 @@ func main() {
 
 	//fmt.Printf("token %s in scadenza tra %d secondi\n", token, scadenza)
 
-	cli := os.Args[1]
 	// Avvia verifica cli.
-	result, err := VerificaAlignment(ctx, token, cli)
+	result, err = VerificaAlignment(ctx, token, cli)
 
 	if err != nil {
 		log.Printf("Errore: %s\n", err.Error())
 	}
 
-	fmt.Println(result)
-	// Termina correttamente.
-	os.Exit(0)
+	//fmt.Println(result)
+
+	return result, err
 }

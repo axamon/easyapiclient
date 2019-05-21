@@ -3,6 +3,7 @@
 conf.json
 ./example/example
 example/example
+serverweb/serverweb
 alignment/alignment
 testvelox/testvelox
 circuit/circuit

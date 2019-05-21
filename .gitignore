@@ -3,3 +3,6 @@
 conf.json
 ./example/example
 example/example
+alignment/alignment
+testvelox/testvelox
+circuit/circuit

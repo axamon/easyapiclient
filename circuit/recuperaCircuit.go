@@ -13,7 +13,7 @@ import (
 var urlCircuit = "https://easyapi.telecomitalia.it:8248/networkcircuit/v1/circuit/tgu/"
 
 // isCli è il formato internazionale italiano dei cellulari.
-var isCli = regexp.MustCompile(`(?m)\+39\d{10,10}`)
+var isCli = regexp.MustCompile(`(?m)\+39\d{9,10}`)
 
 // isToken è il formato che deve avere un token easyapi ben formattato.
 var isToken = regexp.MustCompile(`(?m)[0-9a-z]{8,8}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{12,12}`)

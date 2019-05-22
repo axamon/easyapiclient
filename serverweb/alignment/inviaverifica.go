@@ -3,6 +3,7 @@ package alignment
 import (
 	"context"
 	"crypto/tls"
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -17,6 +18,33 @@ var isCli = regexp.MustCompile(`(?m)\d{9,10}`)
 
 // isToken è il formato che deve avere un token easyapi ben formattato.
 var isToken = regexp.MustCompile(`(?m)[0-9a-z]{8,8}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{12,12}`)
+
+/*
+<alignmentApointInfo>
+   <parametriAllineamento>
+      <attenuazioneDownStream>26.0 dB</attenuazioneDownStream>
+      <attenuazioneUpStream>6.4 dB</attenuazioneUpStream>
+      <margineRumoreDownStream>6.1 dB</margineRumoreDownStream>
+      <margineRumoreUpStream>15.9 dB</margineRumoreUpStream>
+      <velocitaCorrenteLineaDownStream>16172 Kb/s</velocitaCorrenteLineaDownStream>
+      <velocitaCorrenteLineaUpStream>886 Kb/s</velocitaCorrenteLineaUpStream>
+      <velocitaMassimaLineaDownStream>19824 Kb/s</velocitaMassimaLineaDownStream>
+      <velocitaMassimaLineaUpStream>886 Kb/s</velocitaMassimaLineaUpStream>
+      <modalitaAllineamento>ADSL2+</modalitaAllineamento>
+      <percentualeOccupazioneBandaDownStream>81 %</percentualeOccupazioneBandaDownStream>
+      <percentualeOccupazioneBandaUpStream>100 %</percentualeOccupazioneBandaUpStream>
+      <potenzaApplicataDownStream>19.0 dB</potenzaApplicataDownStream>
+      <potenzaApplicataUpStream>11.9 dB</potenzaApplicataUpStream>
+      <statoPowerManagment>l0 (Synchronized)</statoPowerManagment>
+   </parametriAllineamento>
+</alignmentApointInfo>
+*/
+type alignmentResult struct {
+	AttenuazioneDownStream  string `xml:"attenuazioneDownStream"`
+	AttenuazioneUpStream    string `xml:"attenuazioneUpStream"`
+	MargineRumoreDownStream string `xml:"margineRumoreDownStream"`
+	MargineRumoreUpStream   string `xml:"margineRumoreUpStream"`
+}
 
 // VerificaAlignment verifica allineamento accesspoin router.
 func VerificaAlignment(ctx context.Context, token, cli string) (response string, err error) {
@@ -75,7 +103,7 @@ func VerificaAlignment(ctx context.Context, token, cli string) (response string,
 
 	// Se la http response ha un codice di errore esce.
 	if resp.StatusCode > 299 {
-		errStatusCode := fmt.Errorf("Errore %d impossibile inviare sms", resp.StatusCode)
+		errStatusCode := fmt.Errorf("Errore %d impossibile effettuare verifica", resp.StatusCode)
 		return "", errStatusCode
 	}
 
@@ -90,6 +118,9 @@ func VerificaAlignment(ctx context.Context, token, cli string) (response string,
 
 	//fmt.Println(string(bodyresp))
 
+	result := new(alignmentResult)
+	xml.Unmarshal(bodyresp, &result)
+	fmt.Println(result)
 	response = string(bodyresp)
 
 	return response, err

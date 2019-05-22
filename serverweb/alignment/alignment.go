@@ -20,7 +20,7 @@ var conf Configuration
 var file = flag.String("file", "conf.json", "File di configurazione")
 
 // Verifica restituisce l'allineamento del cli.
-func Verifica(cli string) (result string, err error) {
+func Verifica(ctx context.Context, cli string) (result string, err error) {
 	// Creo il contesto inziale che verrà propagato alle go-routine
 	// con la funzione cancel per uscire dal programma in modo pulito.
 	ctx, cancel := context.WithCancel(context.Background())

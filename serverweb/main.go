@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,12 +10,16 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// Creo il contesto inziale che verrà propagato alle go-routine
+// con la funzione cancel per uscire dal programma in modo pulito.
+var ctx, cancel = context.WithCancel(context.Background())
+
 func alignmentHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	version := vars["version"]
 	cli := vars["cli"]
 	//w.Write([]byte("Gorilla!\n"))
-	result, err := alignment.Verifica(cli)
+	result, err := alignment.Verifica(ctx, cli)
 	if err != nil {
 		log.Printf("Errore: %s\n", err.Error())
 	}
@@ -25,6 +30,7 @@ func alignmentHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	defer cancel()
 
 	mx := mux.NewRouter()
 	// Routes consist of a path and a handler function.

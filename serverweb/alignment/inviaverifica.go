@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"regexp"
+	"strings"
 )
 
 // urlAlignment è la URL a cui inviare le richieste di verifica.
@@ -39,11 +40,27 @@ var isToken = regexp.MustCompile(`(?m)[0-9a-z]{8,8}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-
    </parametriAllineamento>
 </alignmentApointInfo>
 */
-type alignmentResult struct {
-	AttenuazioneDownStream  string `xml:"attenuazioneDownStream"`
-	AttenuazioneUpStream    string `xml:"attenuazioneUpStream"`
-	MargineRumoreDownStream string `xml:"margineRumoreDownStream"`
-	MargineRumoreUpStream   string `xml:"margineRumoreUpStream"`
+
+type AlignmentApointInfo struct {
+	XMLName               xml.Name `xml:"alignmentApointInfo"`
+	Text                  string   `xml:",chardata"`
+	ParametriAllineamento struct {
+		Text                                  string `xml:",chardata"`
+		AttenuazioneDownStream                string `xml:"attenuazioneDownStream"`
+		AttenuazioneUpStream                  string `xml:"attenuazioneUpStream"`
+		MargineRumoreDownStream               string `xml:"margineRumoreDownStream"`
+		MargineRumoreUpStream                 string `xml:"margineRumoreUpStream"`
+		VelocitaCorrenteLineaDownStream       string `xml:"velocitaCorrenteLineaDownStream"`
+		VelocitaCorrenteLineaUpStream         string `xml:"velocitaCorrenteLineaUpStream"`
+		VelocitaMassimaLineaDownStream        string `xml:"velocitaMassimaLineaDownStream"`
+		VelocitaMassimaLineaUpStream          string `xml:"velocitaMassimaLineaUpStream"`
+		ModalitaAllineamento                  string `xml:"modalitaAllineamento"`
+		PercentualeOccupazioneBandaDownStream string `xml:"percentualeOccupazioneBandaDownStream"`
+		PercentualeOccupazioneBandaUpStream   string `xml:"percentualeOccupazioneBandaUpStream"`
+		PotenzaApplicataDownStream            string `xml:"potenzaApplicataDownStream"`
+		PotenzaApplicataUpStream              string `xml:"potenzaApplicataUpStream"`
+		StatoPowerManagment                   string `xml:"statoPowerManagment"`
+	} `xml:"parametriAllineamento"`
 }
 
 // VerificaAlignment verifica allineamento accesspoin router.
@@ -118,9 +135,31 @@ func VerificaAlignment(ctx context.Context, token, cli string) (response string,
 
 	//fmt.Println(string(bodyresp))
 
-	result := new(alignmentResult)
+	result := new(AlignmentApointInfo)
 	xml.Unmarshal(bodyresp, &result)
-	fmt.Println(result)
+
+	if strings.Contains(result.ParametriAllineamento.ModalitaAllineamento, "ADSL") {
+
+		var isDownGood = regexp.MustCompile(`(?m)[23].*`)
+		var isNoiseGood = regexp.MustCompile(`(?m)[2-9][3-9].*`)
+
+		if !isDownGood.MatchString(result.ParametriAllineamento.AttenuazioneDownStream) {
+			fmt.Println("BAD!")
+		}
+
+		if isDownGood.MatchString(result.ParametriAllineamento.AttenuazioneDownStream) {
+			fmt.Println("OK!")
+		}
+
+		if !isNoiseGood.MatchString(result.ParametriAllineamento.MargineRumoreDownStream) {
+			fmt.Println("BAD!")
+		}
+
+		if isNoiseGood.MatchString(result.ParametriAllineamento.MargineRumoreDownStream) {
+			fmt.Println("OK!")
+		}
+
+	}
 	response = string(bodyresp)
 
 	return response, err

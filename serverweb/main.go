@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/axamon/easyapiclient/serverweb/alignment"
 	"github.com/gorilla/mux"
@@ -15,11 +16,13 @@ import (
 var ctx, cancel = context.WithCancel(context.Background())
 
 func alignmentHandler(w http.ResponseWriter, r *http.Request) {
+	ctxA, deleteA := context.WithTimeout(ctx, 1*time.Minute)
+	defer deleteA()
 	vars := mux.Vars(r)
 	version := vars["version"]
 	cli := vars["cli"]
 	//w.Write([]byte("Gorilla!\n"))
-	result, err := alignment.Verifica(ctx, cli)
+	result, err := alignment.Verifica(ctxA, cli)
 	if err != nil {
 		log.Printf("Errore: %s\n", err.Error())
 	}

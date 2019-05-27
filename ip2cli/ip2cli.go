@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net"
 	"net/http"
 	"regexp"
@@ -19,8 +20,8 @@ var isCli = regexp.MustCompile(`(?m)\+39\d{10,10}`)
 // isToken è il formato che deve avere un token easyapi ben formattato.
 var isToken = regexp.MustCompile(`(?m)[0-9a-z]{8,8}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{12,12}`)
 
-// RicercaCli recupera il cli dell'ip.
-func RicercaCli(ctx context.Context, token, ip string) (err error) {
+// Ip2cli recupera il cli dell'ip.
+func Ip2cli(ctx context.Context, token, ip string) (err error) {
 
 	verificaIsIP := net.ParseIP(ip)
 
@@ -29,7 +30,7 @@ func RicercaCli(ctx context.Context, token, ip string) (err error) {
 		return err
 	}
 
-	ipaddress := "ip=" + ip + "&port=80"
+	webquery := "ip=" + ip + "&port=8080" //+ "&token=" + ip
 
 	// Verifica che il token sia nel formato corretto.
 	if !isToken.MatchString(token) {
@@ -47,10 +48,10 @@ func RicercaCli(ctx context.Context, token, ip string) (err error) {
 	// Crea il cliet http.
 	client := &http.Client{Transport: tr}
 
-	fmt.Println(urlIP2Cli + ipaddress) // debug
+	fmt.Println(urlIP2Cli + webquery) // debug
 
 	// Crea la request da inviare.
-	req, err := http.NewRequest("GET", urlIP2Cli+ipaddress, nil)
+	req, err := http.NewRequest("GET", urlIP2Cli+webquery, nil)
 	if err != nil {
 		errreq := fmt.Errorf("Errore creazione request: %v: %s", req, err.Error())
 		return errreq
@@ -65,7 +66,7 @@ func RicercaCli(ctx context.Context, token, ip string) (err error) {
 	req.Header.Set("Authorization", bearertoken)
 
 	// Aggiunge alla request gli header per passare le informazioni.
-	req.Header.Set("Content-Type", "application/xml")
+	req.Header.Set("Content-Type", "application/jon")
 
 	// Invia la request HTTP.
 	resp, err := client.Do(req)
@@ -79,8 +80,10 @@ func RicercaCli(ctx context.Context, token, ip string) (err error) {
 
 	// Se la http response ha un codice di errore esce.
 	if resp.StatusCode > 299 {
-		errStatusCode := fmt.Errorf("Errore %d risposta http con errore", resp.StatusCode)
-		return errStatusCode
+		log.Printf("Errore %d risposta http con errore", resp.StatusCode)
+
+		//errStatusCode := fmt.Errorf("Errore %d risposta http con errore", resp.StatusCode)
+		//return errStatusCode
 	}
 
 	// Legge il body della risposta.

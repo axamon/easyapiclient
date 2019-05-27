@@ -48,7 +48,7 @@ func main() {
 
 	ip := os.Args[1]
 	// Avvia ricerca cli da ip.
-	err = RicercaCli(ctx, token, ip)
+	err = Ip2cli(ctx, token, ip)
 
 	if err != nil {
 		log.Printf("Errore: %s\n", err.Error())

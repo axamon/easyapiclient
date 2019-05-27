@@ -20,8 +20,6 @@ var isCli = regexp.MustCompile(`(?m)\d{8,10}`)
 // isToken è il formato che deve avere un token easyapi ben formattato.
 var isToken = regexp.MustCompile(`(?m)[0-9a-z]{8,8}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{12,12}`)
 
-var URI, address string
-
 // VerificaAlignment verifica allineamento accesspoin router.
 func VerificaAlignment(ctx context.Context, token, cli string) (response string, err error) {
 
@@ -31,10 +29,14 @@ func VerificaAlignment(ctx context.Context, token, cli string) (response string,
 	//	return "", err
 	//}
 
+	var URI, address string
+
 	fmt.Println(cli, address) // debug
 
-	if strings.HasPrefix(cli, "tel") == false {
-		address = "tel:+39" + cli
+	address = cli
+
+	if strings.HasPrefix(address, "tel") == false {
+		address = "tel:+39" + address
 	}
 
 	fmt.Println(cli, address) // debug

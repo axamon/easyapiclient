@@ -24,8 +24,6 @@ var isToken = regexp.MustCompile(`(?m)[0-9a-z]{8,8}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-
 // VerificaAlignment verifica allineamento accesspoin router.
 func VerificaAlignment(ctx context.Context, token, cli string) (response string, err error) {
 
-	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
-	defer cancel()
 
 	// Formatta e verifica che il cell inserito sia secondo standard.
 	//if !isCli.MatchString(cli) {
@@ -66,13 +64,20 @@ func VerificaAlignment(ctx context.Context, token, cli string) (response string,
 	client := &http.Client{Transport: tr}
 
 	// Crea la request da inviare.
-	req, err := http.NewRequest("GET", URI, nil)
+	req, err := http.NewRequest.("GET", URI, nil)
 	if err != nil {
 		errreq := fmt.Errorf("Errore creazione request: %v: %s", req, err.Error())
 		return "", errreq
 	}
 
 	// fmt.Println(req)
+
+	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
+	defer cancel()
+
+	ctx, cancel := context.WithTimeout(req.Context(), 1*time.Millisecond)
+	defer cancel()
+
 
 	// Aggiunge alla request il contesto.
 	req.WithContext(ctx)

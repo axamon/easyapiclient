@@ -1,4 +1,4 @@
-package alignment
+package statuszpoint
 
 import (
 	"context"
@@ -12,8 +12,8 @@ import (
 	"time"
 )
 
-// urlAlignment è la URL a cui inviare le richieste di verifica.
-var urlAlignment = "https://easyapi.telecomitalia.it:8248/alignmentapoint/v1/alignment/tgu/"
+// urlstatusZpoint è la URL a cui inviare le richieste di verifica.
+var urlstatusZpoint = "https://easyapi.telecomitalia.it:8248/statuszpoint/v1/status/tgu/"
 
 // isCli è il formato internazionale italiano dei cellulari.
 var isCli = regexp.MustCompile(`(?m)\d{8,10}`)
@@ -21,8 +21,8 @@ var isCli = regexp.MustCompile(`(?m)\d{8,10}`)
 // isToken è il formato che deve avere un token easyapi ben formattato.
 var isToken = regexp.MustCompile(`(?m)[0-9a-z]{8,8}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{12,12}`)
 
-// VerificaAlignment verifica allineamento accesspoin router.
-func VerificaAlignment(ctx context.Context, token, cli string) (response string, err error) {
+// Verifica verifica lo stato Z del modem.
+func Verifica(ctx context.Context, token, cli string) (response string, err error) {
 
 	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
 	defer cancel()
@@ -45,7 +45,7 @@ func VerificaAlignment(ctx context.Context, token, cli string) (response string,
 
 	fmt.Println(cli, address) // debug
 
-	URI = urlAlignment + address
+	URI = urlstatusZpoint + address
 
 	fmt.Println(URI) //debug
 
@@ -109,12 +109,6 @@ func VerificaAlignment(ctx context.Context, token, cli string) (response string,
 
 	fmt.Println(string(bodyresp)) //debug
 
-	risultato, err := ControllaRisultato(ctx, bodyresp)
-	if err != nil {
-		log.Printf("Errore nel controllare risultati: %s\n", err.Error())
-	}
-
-	fmt.Println(risultato)
 	response = string(bodyresp)
 
 	return response, err

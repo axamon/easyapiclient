@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
+	"time"
 )
 
 // urlAlignment è la URL a cui inviare le richieste di verifica.
@@ -35,7 +36,7 @@ func VerificaAlignment(ctx context.Context, token, cli string) (response string,
 
 	address = cli
 
-	if strings.HasPrefix(address, "tel") == false {
+	if strings.HasPrefix(address, "tel:+39") == false {
 		address = "tel:+39" + address
 	}
 
@@ -70,6 +71,9 @@ func VerificaAlignment(ctx context.Context, token, cli string) (response string,
 
 	// fmt.Println(req)
 
+	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
+	defer cancel()
+
 	// Aggiunge alla request il contesto.
 	req.WithContext(ctx)
 
@@ -103,7 +107,7 @@ func VerificaAlignment(ctx context.Context, token, cli string) (response string,
 			err.Error())
 	}
 
-	//fmt.Println(string(bodyresp))
+	fmt.Println(string(bodyresp)) //debug
 
 	risultato, err := ControllaRisultato(ctx, bodyresp)
 	if err != nil {

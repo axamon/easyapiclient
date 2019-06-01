@@ -20,6 +20,12 @@ func main() {
 	// Route per alignment
 	mx.HandleFunc("/api/alignment/{version}", alignmentHandler).Queries("cli", "{cli}")
 
+	// Route per statusZpoint
+	mx.HandleFunc("/api/statuszpoint/{version}", statusZpointHandler).Queries("cli", "{cli}")
+
+	// Route per topologia
+	mx.HandleFunc("/api/topologia/{version}", topologyHandler).Queries("cli", "{cli}")
+
 	// Route per ip2cli
 	mx.HandleFunc("/api/ip2cli/{version}", ip2cliHandler).Queries("ip", "{ip}")
 

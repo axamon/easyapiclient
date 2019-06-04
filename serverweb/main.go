@@ -27,7 +27,7 @@ func main() {
 	// Recupera valori dal file di configurazione passato come argomento.
 	err := gonfig.GetConf(*file, &conf)
 
-	// Se il file non è presente o leggibile chiude l'app.
+	//! Se il file non è presente o leggibile chiude l'app.
 	if err != nil {
 		log.Printf("Errore Impossibile recuperare informazioni dal file di configurazione: %s\n", *file)
 		os.Exit(1)
@@ -50,7 +50,7 @@ func main() {
 	// Route per aligmentFromIP restituisce allineamento apparato
 	mx.HandleFunc("/api/ipaligmentFromIP/{version}", ipaligmentFromIPHandler).Queries("ip", "{ip}")
 
-	// Route per aligmentFromIP restituisce allineamento apparato
+	// Route per aligmentFromIP restituisce informazioni Zpoint apparato
 	mx.HandleFunc("/api/statuszpoint/{version}", statusZpointHandler).Queries("cli", "{cli}")
 
 	// Bind to a port and pass our router in

@@ -16,7 +16,8 @@ type Configuration struct {
 	PasswordSM  string `json:"passwordSM"`
 }
 
-// RinnovaToken richiede un nuovo token a easyapi.
+// RinnovaToken richiede un nuovo token a easyapi
+// relativo all'utente passato come argomento.
 func RinnovaToken(ctx context.Context, utente string) (token string, err error) {
 	ctx, delete := context.WithTimeout(ctx, 1*time.Second)
 	defer delete()

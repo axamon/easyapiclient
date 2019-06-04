@@ -86,7 +86,7 @@ func ip2cliHandler(w http.ResponseWriter, r *http.Request) {
 	version := vars["version"]
 	ip := vars["ip"]
 	//w.Write([]byte("Gorilla!\n"))
-	result, err := ip2cli.VerificaIP2cli(ctxI, token, ip)
+	result, err := ip2cli.RecuperaCLI(ctxI, token, ip)
 	if err != nil {
 		log.Printf("Errore: %s\n", err.Error())
 	}
@@ -108,7 +108,7 @@ func ipaligmentFromIPHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	version := vars["version"]
 	ip := vars["ip"]
-	cli, err := ip2cli.VerificaIP2cli(ctxO, tokenCDN, ip)
+	cli, err := ip2cli.RecuperaCLI(ctxO, tokenCDN, ip)
 	if err != nil {
 		log.Printf("Errore: %s\n", err.Error())
 	}

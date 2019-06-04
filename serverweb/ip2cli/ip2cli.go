@@ -10,6 +10,7 @@ import (
 	"net"
 	"net/http"
 	"regexp"
+	"time"
 )
 
 // urlIp2Cli è la URL a cui inviare le richieste di recupero Cli da Ip.
@@ -18,7 +19,7 @@ var urlIP2Cli = "https://easyapi.telecomitalia.it:8248/ip2cli/v1/queries/ip2cli?
 // isToken è il formato che deve avere un token easyapi ben formattato.
 var isToken = regexp.MustCompile(`(?m)[0-9a-z]{8,8}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{12,12}`)
 
-// Response contiene il risultato della richiesta ip2cli.
+//* Response contiene il risultato della richiesta ip2cli.
 type Response struct {
 	XMLName xml.Name `xml:"ip2cliResponse"`
 	Text    string   `xml:",chardata"`
@@ -27,8 +28,8 @@ type Response struct {
 	Port    string   `xml:"port"`
 }
 
-// VerificaIP2cli recupera il cli dell'ip.
-func VerificaIP2cli(ctx context.Context, token, ip string) (cli string, err error) {
+// RecuperaCLI recupera il cli dell'indirizzo IP passato come argomento.
+func RecuperaCLI(ctx context.Context, token, ip string) (cli string, err error) {
 
 	verificaIsIP := net.ParseIP(ip)
 
@@ -65,6 +66,10 @@ func VerificaIP2cli(ctx context.Context, token, ip string) (cli string, err erro
 	}
 
 	// fmt.Println(req)
+
+	// ! Espande il contesto con timeout.
+	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
+	defer cancel()
 
 	// Aggiunge alla request il contesto.
 	req.WithContext(ctx)

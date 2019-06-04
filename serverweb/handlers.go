@@ -7,10 +7,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/axamon/easyapiclient/serverweb/statuszpoint"
-
 	"github.com/axamon/easyapiclient/serverweb/alignment"
 	"github.com/axamon/easyapiclient/serverweb/ip2cli"
+	"github.com/axamon/easyapiclient/serverweb/statuszpoint"
 	"github.com/axamon/easyapiclient/serverweb/topology"
 	"github.com/gorilla/mux"
 )

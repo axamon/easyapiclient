@@ -31,7 +31,7 @@ import (
 	"github.com/tkanos/gonfig"
 )
 
-// Creo il contesto inziale che verrà propagato alle go-routine,
+// Crea il contesto inziale che verrà propagato alle go-routine,
 // con la funzione cancel per uscire dal programma in modo pulito.
 var ctx, cancel = context.WithCancel(context.Background())
 

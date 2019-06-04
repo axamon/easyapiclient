@@ -1,12 +1,11 @@
 package main
 
 import (
-	"flag"
+	"context"
 	"log"
-	"os"
+	"time"
 
 	"github.com/axamon/easyapiclient"
-	"github.com/tkanos/gonfig"
 )
 
 // Configuration tiene gli elementi di configurazione
@@ -17,47 +16,23 @@ type Configuration struct {
 	PasswordSM  string `json:"passwordSM"`
 }
 
-var conf Configuration
-var file = flag.String("file", "conf.json", "File di configurazione")
+// RinnovaToken richiede un nuovo token a easyapi
+// relativo all'utente passato come argomento.
+func RinnovaToken(ctx context.Context, utente string) (token string, err error) {
+	ctx, delete := context.WithTimeout(ctx, 1*time.Second)
+	defer delete()
 
-// RinnovaTokenCDN richiede un nuovo token a easyapi.
-func RinnovaTokenCDN() (token string, err error) {
-	// Parsa i parametri non di default passati all'avvio.
-	flag.Parse()
+	switch utente {
+	case "CDN":
+		// Recupera un token valido per CDN.
+		token, _, err = easyapiclient.RecuperaToken(ctx, conf.UsernameCDN,
+			conf.PasswordCDN)
 
-	// Recupera valori dal file di configurazione passato come argomento.
-	err = gonfig.GetConf(*file, &conf)
-
-	if err != nil {
-		log.Printf("Errore Impossibile recuperare informazioni dal file di configurazione: %s\n", *file)
-		os.Exit(1)
+	case "SM":
+		// Recupera un token valido per SM.
+		token, _, err = easyapiclient.RecuperaToken(ctx, conf.UsernameSM,
+			conf.PasswordSM)
 	}
-
-	// Recupera un token alignment valido.
-	token, _, err = easyapiclient.RecuperaToken(ctx, conf.UsernameCDN, conf.PasswordCDN)
-
-	if err != nil {
-		log.Printf("Errore nel recupero del token: %s\n", err.Error())
-	}
-
-	return token, err
-}
-
-// RinnovaTokenSM richiede un nuovo token a easyapi.
-func RinnovaTokenSM() (token string, err error) {
-	// Parsa i parametri non di default passati all'avvio.
-	flag.Parse()
-
-	// Recupera valori dal file di configurazione passato come argomento.
-	err = gonfig.GetConf(*file, &conf)
-
-	if err != nil {
-		log.Printf("Errore Impossibile recuperare informazioni dal file di configurazione: %s\n", *file)
-		os.Exit(1)
-	}
-
-	// Recupera un token alignment valido.
-	token, _, err = easyapiclient.RecuperaToken(ctx, conf.UsernameSM, conf.PasswordSM)
 
 	if err != nil {
 		log.Printf("Errore nel recupero del token: %s\n", err.Error())

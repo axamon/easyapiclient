@@ -9,6 +9,10 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
+<<<<<<< HEAD
+=======
+	"time"
+>>>>>>> 4ecec494400c5d352434e64b120bad271bb98ee5
 )
 
 // urlstatusZpoint è la URL a cui inviare le richieste di verifica.
@@ -20,9 +24,18 @@ var isCli = regexp.MustCompile(`(?m)\d{8,10}`)
 // isToken è il formato che deve avere un token easyapi ben formattato.
 var isToken = regexp.MustCompile(`(?m)[0-9a-z]{8,8}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{12,12}`)
 
+<<<<<<< HEAD
 // Verifica verifica allineamento accesspoin router.
 func Verifica(ctx context.Context, token, cli string) (response string, err error) {
 
+=======
+// Verifica verifica lo stato Z del modem.
+func Verifica(ctx context.Context, token, cli string) (response string, err error) {
+
+	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
+	defer cancel()
+
+>>>>>>> 4ecec494400c5d352434e64b120bad271bb98ee5
 	// Formatta e verifica che il cell inserito sia secondo standard.
 	//if !isCli.MatchString(cli) {
 	//	err := fmt.Errorf("Cellulare non nel formato standard: +39xxxxxxxxxx : %s", cli)
@@ -35,7 +48,11 @@ func Verifica(ctx context.Context, token, cli string) (response string, err erro
 
 	address = cli
 
+<<<<<<< HEAD
 	if strings.HasPrefix(address, "tel") == false {
+=======
+	if strings.HasPrefix(address, "tel:+39") == false {
+>>>>>>> 4ecec494400c5d352434e64b120bad271bb98ee5
 		address = "tel:+39" + address
 	}
 
@@ -103,7 +120,11 @@ func Verifica(ctx context.Context, token, cli string) (response string, err erro
 			err.Error())
 	}
 
+<<<<<<< HEAD
 	//fmt.Println(string(bodyresp))
+=======
+	fmt.Println(string(bodyresp)) //debug
+>>>>>>> 4ecec494400c5d352434e64b120bad271bb98ee5
 
 	response = string(bodyresp)
 

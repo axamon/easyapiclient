@@ -7,13 +7,14 @@ import (
 	"io/ioutil"
 	"net/http"
 	"regexp"
+	"strings"
 )
 
 // urlAlignment è la URL a cui inviare le richieste di verifica.
 var urlstatusZpoint = "https://easyapi.telecomitalia.it:8248/statuszpoint/v1/status/tgu/"
 
 // isCli è il formato internazionale italiano dei cellulari.
-var isCli = regexp.MustCompile(`(?m)\+39\d{10,10}`)
+var isCli = regexp.MustCompile(`(?m)\d{9,10}`)
 
 // isToken è il formato che deve avere un token easyapi ben formattato.
 var isToken = regexp.MustCompile(`(?m)[0-9a-z]{8,8}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{12,12}`)
@@ -27,7 +28,11 @@ func StatusZpoint(ctx context.Context, token, cli string) (err error) {
 		return err
 	}
 
-	address := "tel:" + cli
+	address := cli
+
+	if strings.HasPrefix(address, "tel") == false {
+		address = "tel:+39" + address
+	}
 
 	// Verifica che il token sia nel formato corretto.
 	if !isToken.MatchString(token) {

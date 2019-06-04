@@ -41,7 +41,7 @@ var urlIP2Cli = "https://easyapi.telecomitalia.it:8248/ip2cli/v1/queries/ip2cli?
 // isToken è il formato che deve avere un token easyapi ben formattato.
 var isToken = regexp.MustCompile(`(?m)[0-9a-z]{8,8}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-[0-9a-z]{12,12}`)
 
-//* Response contiene il risultato della richiesta ip2cli.
+// Response contiene il risultato della richiesta ip2cli.
 type Response struct {
 	XMLName xml.Name `xml:"ip2cliResponse"`
 	Text    string   `xml:",chardata"`

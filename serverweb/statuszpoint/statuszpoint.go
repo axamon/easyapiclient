@@ -56,7 +56,11 @@ func Verifica(ctx context.Context, token, cli string) (response string, err erro
 	//	return "", err
 	//}
 
-	var URI, address string
+	// URI contiene la URL completa di query.
+	var URI string
+
+	// address contiene il CLI passto come argomento che sarà rielaborato.
+	var address string
 
 	fmt.Println(cli, address) // debug
 

@@ -46,7 +46,7 @@ var isToken = regexp.MustCompile(`(?m)[0-9a-z]{8,8}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-
 // VerificaAlignment verifica allineamento accesspoin router.
 func VerificaAlignment(ctx context.Context, token, cli string) (response string, err error) {
 
-	// Espande il contesto iniziale
+	// ! Espande il contesto iniziale con timeout.
 	ctx, delete := context.WithTimeout(ctx, 2*time.Second)
 	defer delete()
 
@@ -56,6 +56,7 @@ func VerificaAlignment(ctx context.Context, token, cli string) (response string,
 	//	return "", err
 	//}
 
+	// URI è la url completa con query e paramentri.
 	var URI, address string
 
 	fmt.Println(cli, address) // debug

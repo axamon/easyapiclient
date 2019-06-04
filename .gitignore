@@ -5,6 +5,7 @@ conf.json
 example/example
 serverweb/serverweb
 serverweb/serverweb.exe
+*.exe
 alignment/alignment
 testvelox/testvelox
 circuit/circuit

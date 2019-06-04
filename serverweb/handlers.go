@@ -65,22 +65,14 @@ func statusZpointHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	version := vars["version"]
 	cli := vars["cli"]
-<<<<<<< HEAD
-	result, err := alignment.VerificaAlignment(ctxA, token, cli)
-=======
 	//w.Write([]byte("Gorilla!\n"))
 	result, err := statuszpoint.Verifica(ctxA, token, cli)
->>>>>>> 4ecec494400c5d352434e64b120bad271bb98ee5
 	if err != nil {
 		log.Printf("Errore: %s\n", err.Error())
 	}
 	w.Write([]byte(fmt.Sprintf("Version is %s\n", version)))
 	w.Write([]byte(fmt.Sprintf("cli is %s \n", cli)))
-<<<<<<< HEAD
-	w.Write([]byte(fmt.Sprintf("allineamento %s\n", result)))
-=======
 	w.Write([]byte(fmt.Sprintf("statuszpoint %s\n", result)))
->>>>>>> 4ecec494400c5d352434e64b120bad271bb98ee5
 }
 
 func ip2cliHandler(w http.ResponseWriter, r *http.Request) {

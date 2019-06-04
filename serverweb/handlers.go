@@ -32,6 +32,25 @@ func alignmentHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(fmt.Sprintf("allineamento %s\n", result)))
 }
 
+func statusZpointHandler(w http.ResponseWriter, r *http.Request) {
+	token, err := RinnovaTokenSM()
+	if err != nil {
+		log.Printf("Errore nel recupero del token: %s\n", err.Error())
+	}
+	ctxA, deleteA := context.WithTimeout(ctx, 1*time.Minute)
+	defer deleteA()
+	vars := mux.Vars(r)
+	version := vars["version"]
+	cli := vars["cli"]
+	result, err := alignment.VerificaAlignment(ctxA, token, cli)
+	if err != nil {
+		log.Printf("Errore: %s\n", err.Error())
+	}
+	w.Write([]byte(fmt.Sprintf("Version is %s\n", version)))
+	w.Write([]byte(fmt.Sprintf("cli is %s \n", cli)))
+	w.Write([]byte(fmt.Sprintf("allineamento %s\n", result)))
+}
+
 func ip2cliHandler(w http.ResponseWriter, r *http.Request) {
 	token, err := RinnovaTokenCDN()
 	if err != nil {

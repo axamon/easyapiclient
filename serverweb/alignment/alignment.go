@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
+	"time"
 )
 
 // urlAlignment è la URL a cui inviare le richieste di verifica.
@@ -22,6 +23,10 @@ var isToken = regexp.MustCompile(`(?m)[0-9a-z]{8,8}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-
 
 // VerificaAlignment verifica allineamento accesspoin router.
 func VerificaAlignment(ctx context.Context, token, cli string) (response string, err error) {
+
+	// Espande il contesto iniziale
+	ctx, delete := context.WithTimeout(ctx, 2*time.Second)
+	defer delete()
 
 	// Formatta e verifica che il cell inserito sia secondo standard.
 	//if !isCli.MatchString(cli) {

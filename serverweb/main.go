@@ -35,7 +35,12 @@ import (
 // con la funzione cancel per uscire dal programma in modo pulito.
 var ctx, cancel = context.WithCancel(context.Background())
 
+// conf contiene le credenziali di accesso a easyapi.
 var conf Configuration
+
+// file è il file contenente le credenziali di accesso,
+// di default il file è conf.jon ma può essere cambiato all'avvio
+// con apposito flag -file .
 var file = flag.String("file", "conf.json", "File di configurazione")
 
 func main() {
@@ -53,6 +58,7 @@ func main() {
 		os.Exit(1)
 	}
 
+	// mx gestisce tutte le rotte applicative.
 	mx := mux.NewRouter()
 
 	// Route per alignment

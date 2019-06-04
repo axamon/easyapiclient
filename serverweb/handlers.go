@@ -15,17 +15,19 @@ import (
 )
 
 func topologyHandler(w http.ResponseWriter, r *http.Request) {
-	token, err := RinnovaTokenCDN()
+	ctx, delete := context.WithTimeout(ctx, 1*time.Minute)
+	defer delete()
+
+	token, err := RinnovaToken(ctx, "CDN")
 	if err != nil {
 		log.Printf("Errore nel recupero del token: %s\n", err.Error())
 	}
-	ctxA, deleteA := context.WithTimeout(ctx, 1*time.Minute)
-	defer deleteA()
+
 	vars := mux.Vars(r)
 	version := vars["version"]
 	cli := vars["cli"]
 	//w.Write([]byte("Gorilla!\n"))
-	result, err := topology.Verifica(ctxA, token, cli)
+	result, err := topology.Verifica(ctx, token, cli)
 	if err != nil {
 		log.Printf("Errore: %s\n", err.Error())
 	}
@@ -35,17 +37,19 @@ func topologyHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func alignmentHandler(w http.ResponseWriter, r *http.Request) {
-	token, err := RinnovaTokenSM()
+	ctx, delete := context.WithTimeout(ctx, 1*time.Minute)
+	defer delete()
+
+	token, err := RinnovaToken(ctx, "SM")
 	if err != nil {
 		log.Printf("Errore nel recupero del token: %s\n", err.Error())
 	}
-	ctxA, deleteA := context.WithTimeout(ctx, 1*time.Minute)
-	defer deleteA()
+
 	vars := mux.Vars(r)
 	version := vars["version"]
 	cli := vars["cli"]
 	//w.Write([]byte("Gorilla!\n"))
-	result, err := alignment.VerificaAlignment(ctxA, token, cli)
+	result, err := alignment.VerificaAlignment(ctx, token, cli)
 	if err != nil {
 		log.Printf("Errore: %s\n", err.Error())
 	}
@@ -55,40 +59,48 @@ func alignmentHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func statusZpointHandler(w http.ResponseWriter, r *http.Request) {
-	token, err := RinnovaTokenSM()
+	ctx, delete := context.WithTimeout(ctx, 1*time.Minute)
+	defer delete()
+
+	token, err := RinnovaToken(ctx, "SM")
 	if err != nil {
 		log.Printf("Errore nel recupero del token: %s\n", err.Error())
 	}
-	ctxA, deleteA := context.WithTimeout(ctx, 1*time.Minute)
-	defer deleteA()
+
 	vars := mux.Vars(r)
 	version := vars["version"]
 	cli := vars["cli"]
 	//w.Write([]byte("Gorilla!\n"))
-	result, err := statuszpoint.Verifica(ctxA, token, cli)
+	result, err := statuszpoint.Verifica(ctx, token, cli)
 	if err != nil {
 		log.Printf("Errore: %s\n", err.Error())
 	}
+
+	// Mostra allineamento
 	w.Write([]byte(fmt.Sprintf("Version is %s\n", version)))
 	w.Write([]byte(fmt.Sprintf("cli is %s \n", cli)))
 	w.Write([]byte(fmt.Sprintf("statuszpoint %s\n", result)))
 }
 
 func ip2cliHandler(w http.ResponseWriter, r *http.Request) {
-	token, err := RinnovaTokenCDN()
+	ctx, delete := context.WithTimeout(ctx, 1*time.Minute)
+	defer delete()
+
+	token, err := RinnovaToken(ctx, "CDN")
 	if err != nil {
 		log.Printf("Errore nel recupero del token: %s\n", err.Error())
 	}
-	ctxI, deleteI := context.WithTimeout(ctx, 1*time.Minute)
-	defer deleteI()
+
 	vars := mux.Vars(r)
 	version := vars["version"]
 	ip := vars["ip"]
 	//w.Write([]byte("Gorilla!\n"))
-	result, err := ip2cli.RecuperaCLI(ctxI, token, ip)
+	result, err := ip2cli.RecuperaCLI(ctx, token, ip)
 	if err != nil {
 		log.Printf("Errore: %s\n", err.Error())
 	}
+
+	// Mostra allineamento
 	w.Write([]byte(fmt.Sprintf("Version is %s\n", version)))
 	w.Write([]byte(fmt.Sprintf("ip is %s \n", ip)))
 	w.Write([]byte(fmt.Sprintf("ip2cliresult %s\n", result)))
@@ -99,7 +111,7 @@ func ipaligmentFromIPHandler(w http.ResponseWriter, r *http.Request) {
 	ctxO, deleteO := context.WithTimeout(ctx, 1*time.Minute)
 	defer deleteO()
 
-	tokenCDN, err := RinnovaTokenCDN()
+	tokenCDN, err := RinnovaToken(ctx, "CDN")
 	if err != nil {
 		log.Printf("Errore nel recupero del token: %s\n", err.Error())
 	}
@@ -113,7 +125,7 @@ func ipaligmentFromIPHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Verifica allineamento cli
-	tokenSM, err := RinnovaTokenSM()
+	tokenSM, err := RinnovaToken(ctx, "SM")
 	if err != nil {
 		log.Printf("Errore nel recupero del token: %s\n", err.Error())
 	}

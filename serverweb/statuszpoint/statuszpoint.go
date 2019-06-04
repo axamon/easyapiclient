@@ -46,6 +46,7 @@ var isToken = regexp.MustCompile(`(?m)[0-9a-z]{8,8}-[0-9a-z]{4,4}-[0-9a-z]{4,4}-
 // Verifica verifica lo stato Z del modem.
 func Verifica(ctx context.Context, token, cli string) (response string, err error) {
 
+	// ! Espande il contesto con timeout.
 	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
 	defer cancel()
 

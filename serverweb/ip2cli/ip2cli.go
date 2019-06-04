@@ -53,6 +53,10 @@ type Response struct {
 // RecuperaCLI recupera il cli dell'indirizzo IP passato come argomento.
 func RecuperaCLI(ctx context.Context, token, ip string) (cli string, err error) {
 
+	// ! Espande il contesto con timeout.
+	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
+	defer cancel()
+
 	verificaIsIP := net.ParseIP(ip)
 
 	if verificaIsIP.To4() == nil {
@@ -89,11 +93,7 @@ func RecuperaCLI(ctx context.Context, token, ip string) (cli string, err error) 
 
 	// fmt.Println(req)
 
-	// ! Espande il contesto con timeout.
-	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
-	defer cancel()
-
-	// Aggiunge alla request il contesto.
+	// Aggiunge alla request il contesto allargato.
 	req.WithContext(ctx)
 
 	// Aggiunge alla request l'autenticazione.

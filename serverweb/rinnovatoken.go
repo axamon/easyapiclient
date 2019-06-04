@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"log"
+	"time"
 
 	"github.com/axamon/easyapiclient"
 )
@@ -14,26 +16,22 @@ type Configuration struct {
 	PasswordSM  string `json:"passwordSM"`
 }
 
-// RinnovaTokenCDN richiede un nuovo token a easyapi.
-func RinnovaTokenCDN() (token string, err error) {
+// RinnovaToken richiede un nuovo token a easyapi.
+func RinnovaToken(ctx context.Context, utente string) (token string, err error) {
+	ctx, delete := context.WithTimeout(ctx, 1*time.Second)
+	defer delete()
 
-	// Recupera un token alignment valido.
-	token, _, err = easyapiclient.RecuperaToken(ctx, conf.UsernameCDN,
-		conf.PasswordCDN)
+	switch utente {
+	case "CDN":
+		// Recupera un token valido per CDN.
+		token, _, err = easyapiclient.RecuperaToken(ctx, conf.UsernameCDN,
+			conf.PasswordCDN)
 
-	if err != nil {
-		log.Printf("Errore nel recupero del token: %s\n", err.Error())
+	case "SM":
+		// Recupera un token valido per SM.
+		token, _, err = easyapiclient.RecuperaToken(ctx, conf.UsernameSM,
+			conf.PasswordSM)
 	}
-
-	return token, err
-}
-
-// RinnovaTokenSM richiede un nuovo token a easyapi.
-func RinnovaTokenSM() (token string, err error) {
-
-	// Recupera un token alignment valido.
-	token, _, err = easyapiclient.RecuperaToken(ctx, conf.UsernameSM,
-		conf.PasswordSM)
 
 	if err != nil {
 		log.Printf("Errore nel recupero del token: %s\n", err.Error())

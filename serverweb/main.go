@@ -61,6 +61,9 @@ func main() {
 	// mx gestisce tutte le rotte applicative.
 	mx := mux.NewRouter()
 
+	// Route per sms
+	mx.HandleFunc("/api/sms/{version}", smsHandler).Queries("cell", "{cell}", "message", "{message}")
+
 	// Route per alignment
 	mx.HandleFunc("/api/alignment/{version}", alignmentHandler).Queries("cli", "{cli}")
 

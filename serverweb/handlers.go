@@ -26,12 +26,43 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/axamon/easyapiclient/serverweb/sms"
+
 	"github.com/axamon/easyapiclient/serverweb/alignment"
 	"github.com/axamon/easyapiclient/serverweb/ip2cli"
 	"github.com/axamon/easyapiclient/serverweb/statuszpoint"
 	"github.com/axamon/easyapiclient/serverweb/topology"
 	"github.com/gorilla/mux"
 )
+
+func smsHandler(w http.ResponseWriter, r *http.Request) {
+	ctx, delete := context.WithTimeout(ctx, 1*time.Minute)
+	defer delete()
+
+	// Recupera un token valido per CDN da easyapi
+	token, err := RinnovaToken(ctx, "CDN")
+	if err != nil {
+		log.Printf("Errore nel recupero del token: %s\n", err.Error())
+	}
+
+	vars := mux.Vars(r)
+	version := vars["version"]
+	cell := vars["cell"]
+	message := vars["message"]
+
+	shortnumber, err := sms.GetShortnumber(ctx, token)
+	if err != nil {
+		log.Printf("ERROR Impossibile recuperare shortnumber: %s\n", err.Error())
+	}
+
+	err = sms.InviaSms(ctx, token, shortnumber, cell, message)
+	if err != nil {
+		log.Printf("Errore: %s\n", err.Error())
+	}
+	w.Write([]byte(fmt.Sprintf("Version is %s\n", version)))
+	w.Write([]byte(fmt.Sprintf("SMS inviato\n")))
+
+}
 
 func topologyHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, delete := context.WithTimeout(ctx, 1*time.Minute)

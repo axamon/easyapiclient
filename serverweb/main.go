@@ -42,6 +42,7 @@ var conf Configuration
 // di default il file è conf.jon ma può essere cambiato all'avvio
 // con apposito flag -file .
 var file = flag.String("file", "conf.json", "File di configurazione")
+var port = flag.String("port", ":8000", "porta TCP da usare")
 
 func main() {
 	defer cancel()
@@ -83,5 +84,5 @@ func main() {
 	mx.HandleFunc("/api/statuszpoint/{version}", statusZpointHandler).Queries("cli", "{cli}")
 
 	// Bind to a port and pass our router in
-	log.Fatal(http.ListenAndServe(":8000", mx))
+	log.Fatal(http.ListenAndServe(*port, mx))
 }

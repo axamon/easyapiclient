@@ -17,7 +17,7 @@ type Configuration struct {
 }
 
 var conf Configuration
-var file = flag.String("file", "/omd/sites/master/sendsmsconf.json", "File di configurazione")
+var file = flag.String("file", "conf.json", "File di configurazione")
 
 func main() {
 	// Creo il contesto inziale che verrà propagato alle go-routine

@@ -33,12 +33,12 @@ func InviaSms(ctx context.Context, token, shortnumber, cell, message string) (er
 	nuovoSMS := new(sms)
 
 	// Formatta e verifica che il cell inserito sia secondo standard.
-	if !isCell.MatchString(cell) {
-		err := fmt.Errorf("Cellulare non nel formato standard: +39xxxxxxxxxx : %s", cell)
-		return err
-	}
+	// if !isCell.MatchString(cell) {
+	// 	err := fmt.Errorf("Cellulare non nel formato standard: +39xxxxxxxxxx : %s", cell)
+	// 	return err
+	// }
 
-	address := "tel:" + cell
+	address := "tel:+39" + cell
 
 	// Verifica che il messsaggio non super 160 caratteri.
 	if len(message) > 160 {

@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/axamon/easyapiclient"
+	"github.com/axamon/easyapiclient/sendsms"
 	"github.com/tkanos/gonfig"
 )
 
@@ -47,7 +47,7 @@ func main() {
 	// fmt.Printf("token %s in scadenza tra %d secondi\n", token, scadenza)
 
 	// Recupera lo shortnumber da usare per inviare sms.
-	shortnumber, err := easyapiclient.Info(ctx, token)
+	shortnumber, err := sendsms.Info(ctx, token)
 
 	if err != nil {
 		log.Printf("Errore, impossibile recuperare shortnumber %s\n", err.Error())
@@ -55,7 +55,7 @@ func main() {
 	}
 
 	// Invia sms.
-	err = easyapiclient.InviaSms(ctx, token, shortnumber, os.Args[1], os.Args[2])
+	err = sendsms.InviaSms(ctx, token, shortnumber, os.Args[1], os.Args[2])
 
 	if err != nil {
 		log.Printf("Errore, sms non inviato: %s\n", err)

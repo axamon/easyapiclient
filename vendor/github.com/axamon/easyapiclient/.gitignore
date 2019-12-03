@@ -1,0 +1,12 @@
+./example/conf.json
+*.json
+conf.json
+./example/example
+example/example
+serverweb/serverweb
+serverweb/serverweb.exe
+*.exe
+alignment/alignment
+testvelox/testvelox
+circuit/circuit
+ip2cli/ip2cli

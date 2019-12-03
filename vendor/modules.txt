@@ -1,0 +1,11 @@
+# github.com/axamon/easyapiclient v0.0.0-20190722063453-5c77e9930152
+github.com/axamon/easyapiclient
+github.com/axamon/easyapiclient/serverweb/alignment
+github.com/axamon/easyapiclient/serverweb/ip2cli
+github.com/axamon/easyapiclient/serverweb/sms
+github.com/axamon/easyapiclient/serverweb/statuszpoint
+github.com/axamon/easyapiclient/serverweb/topology
+# github.com/gorilla/mux v1.7.2
+github.com/gorilla/mux
+# github.com/tkanos/gonfig v0.0.0-20180326121832-e83209aed2d1
+github.com/tkanos/gonfig

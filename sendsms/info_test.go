@@ -1,4 +1,4 @@
-package easyapiclient
+package sendsms
 
 import (
 	"context"

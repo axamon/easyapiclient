@@ -25,7 +25,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/axamon/easyapiclient"
+	"easyapiclient"
 	"github.com/tkanos/gonfig"
 )
 

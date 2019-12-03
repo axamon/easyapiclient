@@ -25,7 +25,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/axamon/easyapiclient"
+	"easyapiclient"
 )
 
 // Configuration tiene gli elementi di configurazione

@@ -1,5 +1,3 @@
-github.com/axamon/easyapiclient v0.0.0-20190722063453-5c77e9930152 h1:KJXgz/yHDrfcg1SianN4cJURMw3JfQHkcXNUDu1W5Lg=
-github.com/axamon/easyapiclient v0.0.0-20190722063453-5c77e9930152/go.mod h1:ySFZgW9ol2CYmfUNiailyJU2EwIm+GuXjvpMWbBn7sY=
 github.com/gorilla/mux v1.7.2 h1:zoNxOV7WjqXptQOVngLmcSQgXmgk4NMz1HibBchjl/I=
 github.com/gorilla/mux v1.7.2/go.mod h1:1lud6UwP+6orDFRuTfBEV8e9/aOM/c4fVVCaMa2zaAs=
 github.com/tkanos/gonfig v0.0.0-20180326121832-e83209aed2d1 h1:DsqH6eJNjnQookBZ8XjJozxleBGlImYgGGwah4Y3plk=

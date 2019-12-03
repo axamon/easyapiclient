@@ -26,12 +26,12 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/axamon/easyapiclient/serverweb/sms"
+	"easyapiclient/serverweb/sms"
 
-	"github.com/axamon/easyapiclient/serverweb/alignment"
-	"github.com/axamon/easyapiclient/serverweb/ip2cli"
-	"github.com/axamon/easyapiclient/serverweb/statuszpoint"
-	"github.com/axamon/easyapiclient/serverweb/topology"
+	"easyapiclient/serverweb/alignment"
+	"easyapiclient/serverweb/ip2cli"
+	"easyapiclient/serverweb/statuszpoint"
+	"easyapiclient/serverweb/topology"
 	"github.com/gorilla/mux"
 )
 

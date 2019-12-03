@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/axamon/easyapiclient"
+	"easyapiclient"
 )
 
 func TestRecuperaToken(t *testing.T) {
